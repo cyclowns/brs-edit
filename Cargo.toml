@@ -1,0 +1,8 @@
+[package]
+name = "brs-edit"
+version = "0.0.1"
+authors = ["cyclowns <cyclowns@protonmail.ch>"]
+edition = "2018"
+
+[dependencies]
+brs="0.1.0"
