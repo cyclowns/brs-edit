@@ -18,6 +18,42 @@
 //      ! Make examples of REPL commands
 //      ? CI/CD
 
-fn main() {
-    println!("Hello, world!");
+use std::fs::File;
+use brs::{Brick, Color, HasHeader1, HasHeader2};
+use chrono::Utc;
+
+fn main() -> Result<(), std::io::Error> {
+    let reader = brs::Reader::new(File::open("Mini_Jungle.brs")?)?;
+    let reader = reader.read_header1()?;
+    let user = reader.author();
+    let reader = reader.read_header2()?;
+    let (reader, bricks) = reader.iter_bricks_and_reader()?;
+
+    let bricks_to_save: Vec<Brick> = Vec::with_capacity(bricks.collect().length());
+
+    for brick in bricks {
+        brick = brick?;
+        bricks.push(brick):
+    }
+
+    let mut colors = reader.colors();
+    colors[2] = Color::from_rgba(255, 0, 255, 255);
+    colors[3] = Color::from_rgba(255, 0, 255, 255);
+
+    let data = brs::WriteData {
+        author: *user,
+        map: String::from("Plate"),
+        description: String::from("test"),
+        save_time: Utc::now(),
+        mods: reader.mods().to_vec(),
+        brick_assets: reader.brick_assets().to_vec(),
+        colors: colors.to_vec(),
+        materials: reader.materials().to_vec(),
+        brick_owners: reader.brick_owners().to_vec(),
+        bricks: bricks_to_save,
+    };
+
+    Ok(())
 }
+
+// fn write_new_save(
